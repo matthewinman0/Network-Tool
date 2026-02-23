@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.matthew.kotlinfirstapp"
+    namespace = "com.matthew.network-tool"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.matthew.kotlinfirstapp"
+        applicationId = "com.matthew.network-tool"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
