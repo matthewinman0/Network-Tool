@@ -11,31 +11,8 @@ jobs:
 
     steps:
       # Checkout repo
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       # Setup Java
       - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      # Setup Gradle (handles wrapper automatically)
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      # Make gradlew executable (safety step)
-      - name: Grant execute permission
-        run: chmod +x gradlew
-
-      # Build the debug APK
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
-
-      # Upload the APK as artifact
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: NetworkTool-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
