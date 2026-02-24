@@ -4,7 +4,7 @@
 
     <application
         android:label="Network Tool"
-        android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+        android:theme="@style/Theme.NetworkTool"
 
         <activity
             android:name=".MainActivity"
