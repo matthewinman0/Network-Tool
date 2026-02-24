@@ -1,25 +1,25 @@
 package com.matthew.networktool.ui
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.*
-import androidx.compose.material3.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.material3.Surface
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
-sealed class BottomNavItem(
-    val route: String,
-    val label: String,
-    val icon: ImageVector
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+
+@Composable
+fun AppNavigation(
+    selectedIndex: Int,
+    onItemSelected: (Int) -> Unit
 ) {
-    object Home : BottomNavItem("home", "Home", Icons.Filled.Home)
-    object Tools : BottomNavItem("tools", "Tools", Icons.Filled.Build)
-    object Settings : BottomNavItem("settings", "Settings", Icons.Filled.Settings)
+    val items = listOf("Home", "Tools", "Settings")
+
+    NavigationBar {
+        items.forEachIndexed { index, label ->
+            NavigationBarItem(
+                selected = selectedIndex == index,
+                onClick = { onItemSelected(index) },
+                label = { Text(label) },
+                icon = { }
+            )
+        }
+    }
 }
