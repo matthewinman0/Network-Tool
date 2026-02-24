@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Place this file at:  app/src/main/res/values/themes.xml
+    Replace your existing themes.xml entirely with this content.
+-->
 <resources>
-    <style name="Theme.NetworkTool" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorSecondary">@color/purple_700</item>
-    </style>
+    <style name="Theme.NetworkTool" parent="Theme.Material3.DayNight.NoActionBar" />
 </resources>
