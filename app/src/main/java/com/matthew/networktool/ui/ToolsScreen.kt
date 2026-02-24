@@ -1,81 +1,47 @@
 package com.matthew.networktool.ui
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
-data class NetworkTool(
-    val name: String,
-    val action: (Context) -> Unit
-)
-
 @Composable
-fun ToolsScreen() {
-    val context = LocalContext.current
+fun ToolsScreen(viewModel: MainViewModel) {
 
-    val tools = listOf(
-        NetworkTool("WiFi Settings") {
-            context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-        },
-        NetworkTool("Mobile Data Settings") {
-            context.startActivity(Intent(Settings.ACTION_DATA_ROAMING_SETTINGS))
-        },
-        NetworkTool("Open Router (192.168.1.1)") {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.1.1"))
-            context.startActivity(intent)
-        },
-        NetworkTool("IP Info (Browser)") {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://whatismyipaddress.com"))
-            context.startActivity(intent)
-        },
-        NetworkTool("Ping Google (Demo)") {
-            Toast.makeText(context, "Pinging google.com...", Toast.LENGTH_SHORT).show()
-        },
-        NetworkTool("DNS Settings") {
-            context.startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
-        }
-    )
+    var selectedTool by remember { mutableStateOf<ToolDefinition?>(null) }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(tools) { tool ->
-            ToolCard(tool, context)
+        items(viewModel.availableTools) { tool ->
+            Card {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(tool.name)
+                    Button(onClick = { selectedTool = tool }) {
+                        Text("Add to Home")
+                    }
+                }
+            }
         }
     }
-}
 
-@Composable
-fun ToolCard(tool: NetworkTool, context: Context) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        onClick = { tool.action(context) }
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(
-                text = tool.name,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
+    selectedTool?.let { tool ->
+        AddToHomeDialog(
+            tool = tool,
+            onDismiss = { selectedTool = null },
+            onConfirm = { config ->
+                viewModel.addWidget(tool, config)
+                selectedTool = null
+            }
+        )
     }
 }
