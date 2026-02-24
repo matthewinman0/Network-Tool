@@ -3,68 +3,66 @@ package com.matthew.networktool
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.matthew.networktool.ui.HomeScreen
-import com.matthew.networktool.ui.ToolsScreen
-import com.matthew.networktool.ui.SettingsScreen
+import com.matthew.networktool.ui.*
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
-                AppNavigation()
-            }
+            NetworkToolApp(viewModel)
         }
     }
 }
 
 @Composable
-fun AppNavigation() {
+fun NetworkToolApp(viewModel: MainViewModel) {
 
-    var selectedRoute by remember { mutableStateOf("home") }
-
-    val items = listOf(
-        BottomItem("home", "Home", Icons.Default.Home),
-        BottomItem("tools", "Tools", Icons.Default.Build),
-        BottomItem("settings", "Settings", Icons.Default.Settings)
-    )
+    var selectedIndex by remember { mutableStateOf(0) }
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = selectedRoute == item.route,
-                        onClick = { selectedRoute = item.route },
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) }
-                    )
-                }
+                NavigationBarItem(
+                    selected = selectedIndex == 0,
+                    onClick = { selectedIndex = 0 },
+                    label = { Text("Home") },
+                    icon = {}
+                )
+                NavigationBarItem(
+                    selected = selectedIndex == 1,
+                    onClick = { selectedIndex = 1 },
+                    label = { Text("Tools") },
+                    icon = {}
+                )
+                NavigationBarItem(
+                    selected = selectedIndex == 2,
+                    onClick = { selectedIndex = 2 },
+                    label = { Text("Settings") },
+                    icon = {}
+                )
             }
         }
     ) { padding ->
 
-        Box(modifier = Modifier.padding(padding)) {
-            when (selectedRoute) {
-                "home" -> HomeScreen()
-                "tools" -> ToolsScreen()
-                "settings" -> SettingsScreen()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            when (selectedIndex) {
+                0 -> HomeScreen(viewModel)
+                1 -> ToolsScreen(viewModel)
+                2 -> SettingsScreen()
             }
         }
     }
 }
-
-data class BottomItem(
-    val route: String,
-    val label: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
-)
