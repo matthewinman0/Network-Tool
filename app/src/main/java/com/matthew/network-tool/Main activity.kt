@@ -1,30 +1,42 @@
-package com.matthew.networktool
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.MaterialToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topAppBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:title="Network Tool"
+    android:background="?attr/colorPrimary"/>
 
-import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-class MainActivity : AppCompatActivity() {
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter host (example: google.com)">
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/hostInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        val textView = TextView(this)
-        val button = Button(this)
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/pingButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ping Host"
+        android:layout_marginTop="16dp"/>
 
-        textView.text = "Hello Matthew 👋"
-        button.text = "Click Me"
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Results will appear here"
+        android:layout_marginTop="24dp"/>
 
-        button.setOnClickListener {
-            textView.text = "Button Clicked!"
-        }
-
-        val layout = android.widget.LinearLayout(this)
-        layout.orientation = android.widget.LinearLayout.VERTICAL
-        layout.addView(textView)
-        layout.addView(button)
-
-        setContentView(layout)
-    }
-}
+</LinearLayout>
