@@ -56,10 +56,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    // Material 3
+    // Material 3 — both the Compose AND the XML/View library (needed for theme resources)
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.android.material:material:1.12.0")
 
-    // Material Icons Extended (NetworkPing, Router, SimCard, Http, etc.)
+    // Material Icons Extended
     implementation("androidx.compose.material:material-icons-extended")
 
     // Navigation
