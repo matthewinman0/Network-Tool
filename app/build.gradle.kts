@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.matthew.network-tool"
+        applicationId = "com.matthew.networktool"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
