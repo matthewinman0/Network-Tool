@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.matthew.network-tool"
+    namespace = "com.matthew.networktool"
     compileSdk = 34
 
     defaultConfig {
