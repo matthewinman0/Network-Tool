@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java
@@ -19,11 +19,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # This automatically installs gradle + wrapper
+      # Automatically handles Gradle + wrapper
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build APK
+      # Build using Gradle directly
+      - name: Build Debug APK
         run: gradle assembleDebug
 
       - name: Upload APK
