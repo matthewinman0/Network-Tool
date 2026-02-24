@@ -1,2 +1,2 @@
-rootproject.name = "network-tool"
+rootProject.name = "network-tool"
 include(":app")
