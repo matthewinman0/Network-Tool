@@ -45,3 +45,40 @@ fun ToolsScreen(viewModel: MainViewModel) {
         )
     }
 }
+
+@Composable
+fun AddToHomeDialog(
+    tool: ToolDefinition,
+    onDismiss: () -> Unit,
+    onConfirm: (Map<String, String>) -> Unit
+) {
+    var input by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add ${tool.name}") },
+        text = {
+            Column {
+                Text("Optional setting:")
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = input,
+                    onValueChange = { input = it },
+                    label = { Text("Target / Config") }
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                onConfirm(mapOf("value" to input))
+            }) {
+                Text("Add")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
