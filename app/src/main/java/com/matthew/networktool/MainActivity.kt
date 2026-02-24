@@ -1,68 +1,107 @@
-package com.matthew.networktool
+package com.example.networktool
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.matthew.networktool.ui.*
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.*
+import com.example.networktool.ui.theme.NetworkToolTheme
+import com.example.networktool.screens.HomeScreen
+import com.example.networktool.screens.SettingsScreen
+import com.example.networktool.tools.*
 
 class MainActivity : ComponentActivity() {
-
-    private val viewModel: MainViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContent {
-            NetworkToolApp(viewModel)
+            NetworkToolTheme {
+                NetworkToolApp()
+            }
         }
     }
 }
 
-@Composable
-fun NetworkToolApp(viewModel: MainViewModel) {
+sealed class Screen(val route: String, val title: String) {
+    object Home : Screen("home", "Home")
+    object Settings : Screen("settings", "Settings")
+    // Tool screens
+    object Ping : Screen("tool/ping", "Auto Ping")
+    object IpInfo : Screen("tool/ipinfo", "IP Info")
+    object DnsLookup : Screen("tool/dns", "DNS Lookup")
+    object SimInfo : Screen("tool/sim", "SIM Info")
+    object PortScanner : Screen("tool/portscan", "Port Scanner")
+    object WifiInfo : Screen("tool/wifi", "Wi-Fi Info")
+    object Traceroute : Screen("tool/traceroute", "Traceroute")
+    object SpeedTest : Screen("tool/speedtest", "Speed Test")
+    object SubnetCalc : Screen("tool/subnet", "Subnet Calc")
+    object HttpChecker : Screen("tool/http", "HTTP Checker")
+}
 
-    var selectedIndex by remember { mutableStateOf(0) }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NetworkToolApp() {
+    val navController = rememberNavController()
+
+    val bottomNavItems = listOf(
+        Triple(Screen.Home.route, "Home", Icons.Default.Home),
+        Triple(Screen.Settings.route, "Settings", Icons.Default.Settings),
+    )
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar {
-                NavigationBarItem(
-                    selected = selectedIndex == 0,
-                    onClick = { selectedIndex = 0 },
-                    label = { Text("Home") },
-                    icon = {}
-                )
-                NavigationBarItem(
-                    selected = selectedIndex == 1,
-                    onClick = { selectedIndex = 1 },
-                    label = { Text("Tools") },
-                    icon = {}
-                )
-                NavigationBarItem(
-                    selected = selectedIndex == 2,
-                    onClick = { selectedIndex = 2 },
-                    label = { Text("Settings") },
-                    icon = {}
-                )
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                bottomNavItems.forEach { (route, title, icon) ->
+                    NavigationBarItem(
+                        icon = { Icon(icon, contentDescription = title) },
+                        label = { Text(title) },
+                        selected = currentDestination?.hierarchy?.any { it.route == route } == true,
+                        onClick = {
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
             }
         }
-    ) { padding ->
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home.route,
+            modifier = Modifier.padding(innerPadding)
         ) {
-            when (selectedIndex) {
-                0 -> HomeScreen(viewModel)
-                1 -> ToolsScreen(viewModel)
-                2 -> SettingsScreen()
+            composable(Screen.Home.route) {
+                HomeScreen(navController = navController)
             }
+            composable(Screen.Settings.route) {
+                SettingsScreen()
+            }
+            composable(Screen.Ping.route) { PingScreen() }
+            composable(Screen.IpInfo.route) { IpInfoScreen() }
+            composable(Screen.DnsLookup.route) { DnsLookupScreen() }
+            composable(Screen.SimInfo.route) { SimInfoScreen() }
+            composable(Screen.PortScanner.route) { PortScannerScreen() }
+            composable(Screen.WifiInfo.route) { WifiInfoScreen() }
+            composable(Screen.Traceroute.route) { TracerouteScreen() }
+            composable(Screen.SpeedTest.route) { SpeedTestScreen() }
+            composable(Screen.SubnetCalc.route) { SubnetCalcScreen() }
+            composable(Screen.HttpChecker.route) { HttpCheckerScreen() }
         }
     }
 }
