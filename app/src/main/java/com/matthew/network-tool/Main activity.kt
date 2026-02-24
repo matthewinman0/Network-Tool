@@ -1,4 +1,4 @@
-package com.matthew.network-tool
+package com.matthew.networktool
 
 import android.os.Bundle
 import android.widget.Button
