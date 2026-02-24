@@ -1,42 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.MaterialToolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/topAppBar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:title="Network Tool"
-    android:background="?attr/colorPrimary"/>
+package com.matthew.networktool
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.*
+import java.net.InetAddress
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter host (example: google.com)">
+class MainActivity : AppCompatActivity() {
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/hostInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    private lateinit var resultText: TextView
+    private lateinit var hostInput: TextInputEditText
+    private lateinit var pingButton: MaterialButton
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/pingButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ping Host"
-        android:layout_marginTop="16dp"/>
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    <TextView
-        android:id="@+id/resultText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Results will appear here"
-        android:layout_marginTop="24dp"/>
+        resultText = findViewById(R.id.resultText)
+        hostInput = findViewById(R.id.hostInput)
+        pingButton = findViewById(R.id.pingButton)
 
-</LinearLayout>
+        pingButton.setOnClickListener {
+            val host = hostInput.text.toString()
+            if (host.isNotEmpty()) {
+                pingHost(host)
+            }
+        }
+    }
+
+    private fun pingHost(host: String) {
+        resultText.text = "Pinging..."
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val start = System.currentTimeMillis()
+                val address = InetAddress.getByName(host)
+                val reachable = address.isReachable(3000)
+                val end = System.currentTimeMillis()
+
+                val time = end - start
+
+                withContext(Dispatchers.Main) {
+                    if (reachable) {
+                        resultText.text = "Host reachable\nIP: ${address.hostAddress}\nTime: ${time}ms"
+                    } else {
+                        resultText.text = "Host unreachable"
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    resultText.text = "Error: ${e.message}"
+                }
+            }
+        }
+    }
+}
