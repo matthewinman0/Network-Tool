@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    DO NOT copy this file wholesale if your project already has an AndroidManifest.xml.
+    Instead, just add the <uses-permission> lines below into your existing manifest,
+    and add android:usesCleartextTraffic="true" to your <application> tag.
+
+    Your existing ic_launcher, app_name, and theme resources stay untouched.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Core network permissions -->
+    <!-- Existing permission (keep if already present) -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- ADD THESE new permissions for the new tools -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-    <!-- SIM / Phone state (requested at runtime) -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <!-- Optional: precise Wi-Fi info on Android 9+ requires location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -32,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
